@@ -1,57 +1,65 @@
-import React, {useLayoutEffect} from  'react';
-import { View, Text, Button, TextInput } from'react-native';
+import React, { useState, useLayoutEffect,  } from 'react';
+import { 
+    View,
+    Text,
+    Button,
+    TextInput,
+    SafeAreaView,
+    StyleSheet,
+    FlatList
+} from'react-native';
+import {StatusBar} from 'expo-status-bar'
 import { useNavigation} from '@react-navigation/native';
-import { useState } from 'react';
 
 export default function HomeScreen (){
 
-    const [ name, setName] = useState('');
-    const [count, setCount] = useState(0);
-    const navigation = useNavigation()
-
-
-    const handleAboutclick = () =>{
-        navigation.setOptions({
-            title: name
-        })
-    }
-
-    const handleAddUn = ()=>{
-        setCount(e=>e+1)
-    }
-
-   useLayoutEffect(()=>{
-       navigation.setOptions({
-           headerTitle:count
-       })
-
-   },[count]) 
+    const [receita, setReceita] = useState([]);
+    const [input, setInput] = useState('')
+    const navigation =  useNavigation();
+    
+    const hendleAdd = () => {
+        setInput(e=>setReceita(e))
+    } 
 
     useLayoutEffect(()=>{
         navigation.setOptions({
-            headerLeft:()=> <Button title="mais um" onPress={handleAddUn}/>
+            headerRight:()=><Button onPress={hendleAdd} title="adicionar"/>
         })
     },[])
-
-    const handleClick = () =>{
-        navigation.setOptions({
-            headerStyle:{
-                backgroundColor:'#000'
-            }
-        })
-    }
-
+    
     return(
-        <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
-            <Text>tela home</Text>
-            <TextInput
-                style={{height:45, backgroundColor:'#888', width:'90%', paddingHorizontal:20, borderRadius:20}}
-                onChangeText={t=> setName(t)}
-                value={name}
-            />
-            <Button onPress={handleAboutclick} title="Ir para about"/>
-            <Button onPress={handleClick} title="Ir para about"/>
 
-        </View>
+        <SafeAreaView style={styles.container}>
+            <StatusBar/>
+            <TextInput
+                placeholder="Digite uma receita"
+                placeholderTextColor="#fff"
+                style={styles.input} 
+                onChangeText={(t)=>setInput(t)}
+                value={input}
+             />
+             {receita.map((item, i)=>(
+                 <View key={i}>
+                      <Text style={{color:'#fff'}}>{item}</Text>
+                 </View>
+             ))}
+        </SafeAreaView>
+
     );
 }
+
+const styles = StyleSheet.create({
+    container:{
+        backgroundColor:'#000',
+        flex: 1,
+        paddingVertical:20,
+        alignItems:'center'
+    },
+    input:{
+        height: 45,
+        width: '90%',
+        backgroundColor:'rgb(100, 100, 100)',
+        borderRadius:30,
+        paddingHorizontal:10
+    },
+})
