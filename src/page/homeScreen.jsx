@@ -1,4 +1,4 @@
-import React from  'react';
+import React, {useLayoutEffect} from  'react';
 import { View, Text, Button, TextInput } from'react-native';
 import { useNavigation} from '@react-navigation/native';
 import { useState } from 'react';
@@ -6,13 +6,32 @@ import { useState } from 'react';
 export default function HomeScreen (){
 
     const [ name, setName] = useState('');
+    const [count, setCount] = useState(0);
     const navigation = useNavigation()
+
 
     const handleAboutclick = () =>{
         navigation.setOptions({
             title: name
         })
     }
+
+    const handleAddUn = ()=>{
+        setCount(e=>e+1)
+    }
+
+   useLayoutEffect(()=>{
+       navigation.setOptions({
+           headerTitle:count
+       })
+
+   },[count]) 
+
+    useLayoutEffect(()=>{
+        navigation.setOptions({
+            headerLeft:()=> <Button title="mais um" onPress={handleAddUn}/>
+        })
+    },[])
 
     const handleClick = () =>{
         navigation.setOptions({
